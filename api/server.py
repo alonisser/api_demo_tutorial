@@ -15,12 +15,12 @@ def hello_world():
 def corona_view():
     return "Over 600 death in Israel currently"
 
-
+#
 @app.route("/greet/<string:name>")  # I can get params
 def greet_view(name: str):
-    return f"Hello {name}"
-
-
+    return f"Hello {name.upper()}"
+#
+#
 @app.route("/data")
 def data_view():
     return {
@@ -32,11 +32,20 @@ def data_view():
 @app.route("/world_clock/<a_timezone>")
 def world_clock_view(a_timezone: str):
     base_uri = "http://worldtimeapi.org/api/timezone/"
-    normalized_timezone = "/".join(a_timezone.split('.'))
+    normalized_timezone = "/".join(a_timezone.split('.')) #["Europe", "Paris"] # Europe/Paris
     res = requests.get(urljoin(base_uri, normalized_timezone))
-    current_time = res.json().get('datetime')
+    DEFAULT_VALUE = 'Missing datetime'
+    current_time = res.json().get('datetime', DEFAULT_VALUE)
     return f"in {a_timezone} it's currently {current_time}"
+#
 
+@app.route("/something")
+def do_something():
+    user = db.get_user()
+    db.insert()
+    return {
+        user:user
+    }
 
 if __name__ == "__main__":
     app.run(port=5000, host="127.0.0.1")
